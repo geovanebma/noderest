@@ -1,9 +1,18 @@
 const custonExpress = require("./config/custonExpress.js")
+const conexao = require("./infraestrutura/conexao")
+const Tabelas = require("./infraestrutura/tabelas")
+//Conferindo a conexão com o banco de dados
+conexao.connect((erro) => {
+    if(erro){
+        console.log(erro)
+    }else{
+        //Se estiver conectado com sucesso, ai sim roda o servidor
+        console.log("Conectando com sucesso.")
+        Tabelas.init(conexao)
+        const app = custonExpress()
 
-//Toda definição do custonExpress estará sendo trazida aqui passando para a constante app
-const app = custonExpress()
-
-//Criação do servidor
-app.listen(3000, function(){
-    console.log("Rodando na porta 3000.")
+        app.listen(3000, function(){
+            console.log("Rodando na porta 3000.")
+        })
+    }
 })
