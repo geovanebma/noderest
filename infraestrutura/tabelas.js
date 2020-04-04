@@ -10,6 +10,8 @@ class Tabelas{
             cliente varchar(50) NOT NULL,
             pet varchar(20),
             servico varchar(20) NOT NULL,
+            data datetime NOT NULL,
+            data_cri datetime NOT NULL,
             status varchar(20) NOT NULL,
             observacoes text NOT NULL,
             PRIMARY KEY(id)
