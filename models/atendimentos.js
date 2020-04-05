@@ -2,6 +2,7 @@ const moment = require('moment')
 const conexao = require('../infraestrutura/conexao')
 
 class Atendimento {
+    //Inserir no BD
     adiciona(atendimento, resp) {
         //Moment é exclusivo para formatar as datas a desejar
         const datacri = moment().format('YYYY-MM-DD HH:MM:SS')
@@ -38,10 +39,66 @@ class Atendimento {
                     resp.status(400).json(erro)
                 } else {
                     //.json - mostra a resposta em json 
-                    resp.status(201).json(resultados)
+                    resp.status(201).json(atendimento)
                 }
             })
         }
+    }
+
+    //Lista todas as informações que tem no BD
+    lista(resp){
+        const sql = "SELECT * FROM Atendimentos"
+
+        conexao.query(sql, (erro, resultados) => {
+            if(erro){
+                resp.status(400).json(erro)
+            }else{
+                resp.status(200).json(resultados)
+            }
+        })
+    }
+
+    //Essencial para buscar um único id
+    buscaPorId(id, resp){
+        const sql = `SELECT * FROM Atendimentos WHERE id=${id}`
+
+        conexao.query(sql, (erro, resultados) => {
+            const atendimento = resultados[0]
+            if(erro){
+                resp.status(400).json(erro)
+            }else{
+                resp.status(200).json(atendimento)
+            }
+        })
+    }
+
+    //Alterar no BD
+    altera(id, valores, resp){
+        if(valores.data){
+            valores.data = moment(valores.data, 'DD/MM/YYYY').format('YYYY-MM-DD HH:MM:SS')
+        }
+        const sql = "UPDATE atendimentos SET ? WHERE id=?"
+
+        conexao.query(sql, [valores, id], (erro, resultados) => {
+            if (erro) {
+                resp.status(400).json(erro)
+            }else{
+                resp.status(200).json(...valores, id)
+            }
+        })
+    }
+
+    //Deletar pelo id
+    deleta(id, resp){
+        sql = `DELETE FROM atendimentos WHERE id=${id}`
+
+        conexao.query(sql, (erro, resultados) =>{
+            if(erro){
+                resp.status(400).json(erro)
+            }else{
+                resp.status(200).json({id})
+            }
+        })
     }
 }
 

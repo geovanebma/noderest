@@ -3,13 +3,29 @@ const Atendimento = require("../models/atendimentos")
 module.exports = app => {
     //Criação de rota
     app.get("/atendimentos", (req, resp) => {
-        resp.send("Você está na rota de atendimentos com método GET.")
+        Atendimento.lista(resp)
+    })
+
+    app.get("/atendimentos/:id", (req, resp) => {
+        const id = parseInt(req.params.id)
+        Atendimento.buscaPorId(id, resp)
     })
 
     app.post("/atendimentos", (req, resp) => {
         const atendimento = req.body
 
         Atendimento.adiciona(atendimento, resp)
+    })
+
+    app.patch("/atendimentos/:id", (req, resp) =>{
+        const id = parseInt(req.params.id)
+        const valores = req.body
+        Atendimento.altera(id, valores, resp)
+    })
+
+    app.delete("/atendimentos/:id", (req, resp) =>{
+        const id = parseInt(req.params.id)
+        Atendimento.deleta(id, resp)
     })
 }
 
